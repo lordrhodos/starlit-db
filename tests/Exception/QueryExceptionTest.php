@@ -2,7 +2,9 @@
 
 namespace Starlit\Db\Exception;
 
-class QueryExceptionTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class QueryExceptionTest extends TestCase
 {
     /**
      * @var QueryException

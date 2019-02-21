@@ -2,9 +2,10 @@
 
 namespace Starlit\Db\Migration;
 
+use PHPUnit\Framework\TestCase;
 use Starlit\Db\Db;
 
-class MigratorTest extends \PHPUnit_Framework_TestCase
+class MigratorTest extends TestCase
 {
     /**
      * @var Migrator

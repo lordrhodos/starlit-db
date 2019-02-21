@@ -2,13 +2,15 @@
 
 namespace Starlit\Db;
 
+use PHPUnit\Framework\TestCase;
+
 use DateTime;
 use PDO;
 use PDOException;
 use PDOStatement;
 use Starlit\Db\Exception\ConnectionException;
 
-class DbTest extends \PHPUnit_Framework_TestCase
+class DbTest extends TestCase
 {
     /**
      * @var Db

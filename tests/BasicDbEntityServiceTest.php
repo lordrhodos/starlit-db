@@ -2,7 +2,9 @@
 
 namespace Starlit\Db;
 
-class BasicDbEntityServiceTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BasicDbEntityServiceTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject

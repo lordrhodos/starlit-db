@@ -3,8 +3,9 @@
 namespace Starlit\Db\Monolog;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 
-class DbFormatterTest extends \PHPUnit_Framework_TestCase
+class DbFormatterTest extends TestCase
 {
     public function testFormat()
     {

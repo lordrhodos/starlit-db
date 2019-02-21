@@ -3,9 +3,10 @@
 namespace Starlit\Db\Monolog;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 use Starlit\Db\Db;
 
-class DbHandlerTest extends \PHPUnit_Framework_TestCase
+class DbHandlerTest extends TestCase
 {
     /**
      * @var array

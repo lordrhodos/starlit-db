@@ -2,7 +2,9 @@
 
 namespace Starlit\Db;
 
-class AbstractDbEntityFetcherTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class AbstractDbEntityFetcherTest extends TestCase
 {
     /**
      * @var AbstractDbEntityFetcher
