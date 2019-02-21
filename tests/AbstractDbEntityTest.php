@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db;
 
@@ -6,33 +6,33 @@ use PHPUnit\Framework\TestCase;
 
 class AbstractDbEntityTest extends TestCase
 {
-    public function testConstructorScalarInit()
+    public function testConstructorScalarInit(): void
     {
         $entity = new TestDbEntity(3);
         $this->assertEquals($entity->getPrimaryDbValue(), 3);
     }
 
-    public function testCheckStaticProperties()
+    public function testCheckStaticProperties(): void
     {
         $this->expectException(\LogicException::class);
 
         new TestIncompleteDbEntity();
     }
 
-    public function testGetDefaultDbData()
+    public function testGetDefaultDbData(): void
     {
         $entity = new TestDbEntity(3);
         $firstProperties = array_slice($entity->getDefaultDbData(), 0, 3);
         $this->assertEquals(['someId' => 0, 'someName' => 'test', 'someField' => false], $firstProperties);
     }
 
-    public function testGetPrimaryDbValue()
+    public function testGetPrimaryDbValue(): void
     {
         $entity = new TestDbEntity(5);
         $this->assertEquals(5, $entity->getPrimaryDbValue());
     }
 
-    public function testSetPrimaryDbValue()
+    public function testSetPrimaryDbValue(): void
     {
         $entity = new TestDbEntity();
         $entity->setPrimaryDbValue(6);
@@ -40,7 +40,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals(6, $entity->getSomeId());
     }
 
-    public function testSetGetPrimaryDbValueWithMultiKey()
+    public function testSetGetPrimaryDbValueWithMultiKey(): void
     {
         $key = [5, 2];
         $entity = new TestDbEntityMultiPrimary();
@@ -49,14 +49,14 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals($key, [$entity->getSomeId(), $entity->getSomeOtherId()]);
     }
 
-    public function testSetPrimaryDbValueWithInvalidMultiKey()
+    public function testSetPrimaryDbValueWithInvalidMultiKey(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $entity = new TestDbEntityMultiPrimary();
         $entity->setPrimaryDbValue(5);
     }
 
-    public function testUpdatePrimaryDbValueFromDbDataUpdates()
+    public function testUpdatePrimaryDbValueFromDbDataUpdates(): void
     {
         $id = 123;
         $entity = new TestDbEntity();
@@ -68,7 +68,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertSame($id, $entity->getPrimaryDbValue());
     }
 
-    public function testUpdatePrimaryDbValueFromDbDataDoesntUpdateEmpty()
+    public function testUpdatePrimaryDbValueFromDbDataDoesntUpdateEmpty(): void
     {
         $entity = new TestDbEntity();
         $entity->setSomeId(0);
@@ -78,7 +78,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEmpty($entity->getPrimaryDbValue());
     }
 
-    public function testIsNewDbEntity()
+    public function testIsNewDbEntity(): void
     {
         $entity = new TestDbEntity();
         $this->assertTrue($entity->isNewDbEntity());
@@ -87,14 +87,14 @@ class AbstractDbEntityTest extends TestCase
         $this->assertFalse($entity->isNewDbEntity());
     }
 
-    public function testIsNewDbEntityWithMultiKey()
+    public function testIsNewDbEntityWithMultiKey(): void
     {
         $entity = new TestDbEntityMultiPrimary();
         $this->expectException(\LogicException::class);
         $entity->isNewDbEntity();
     }
 
-    public function testSetDbValueFail()
+    public function testSetDbValueFail(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -104,7 +104,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals('blah', $method->invoke($entity, 'blalb', 'val'));
     }
 
-    public function testSetDbValue()
+    public function testSetDbValue(): void
     {
         $entity = new TestDbEntity();
 
@@ -120,7 +120,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals(123, $method->invoke($entity, 'someName'));
     }
 
-    public function testSetDbValueNull()
+    public function testSetDbValueNull(): void
     {
         $entity = new TestDbEntity();
 
@@ -141,7 +141,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals(0.0, $getMethod->invoke($entity, 'someOtherFloat'));
     }
 
-    public function testSetDbValueDateTime()
+    public function testSetDbValueDateTime(): void
     {
         $entity = new TestDbEntity();
 
@@ -157,7 +157,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertNull($entity->getSomeDate());
     }
 
-    public function testSetDbValueNoChange()
+    public function testSetDbValueNoChange(): void
     {
         $entity = new TestDbEntity();
 
@@ -165,7 +165,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertFalse($entity->isDbPropertyModified('someName'));
     }
 
-    public function testSetDbValueForceChange()
+    public function testSetDbValueForceChange(): void
     {
         $entity = new TestDbEntity();
 
@@ -173,13 +173,13 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->isDbPropertyModified('someName'));
     }
     
-    public function testGetDbFieldName()
+    public function testGetDbFieldName(): void
     {
         $entity = new TestDbEntity();
         $this->assertEquals('some_name', $entity->getDbFieldName('someName'));
     }
 
-    public function testShouldInsertOnDbSave()
+    public function testShouldInsertOnDbSave(): void
     {
         $entity = new TestDbEntity();
         $this->assertTrue($entity->shouldInsertOnDbSave());
@@ -189,7 +189,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->shouldInsertOnDbSave());
     }
 
-    public function testHasModifiedDbProperties()
+    public function testHasModifiedDbProperties(): void
     {
         $entity = new TestDbEntity();
         $this->assertFalse($entity->hasModifiedDbProperties());
@@ -198,7 +198,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->hasModifiedDbProperties());
     }
 
-    public function testClearModifiedDbProperty()
+    public function testClearModifiedDbProperty():void
     {
         $entity = new TestDbEntity();
         $entity->setSomeField(true);
@@ -207,12 +207,12 @@ class AbstractDbEntityTest extends TestCase
         $this->assertFalse($entity->hasModifiedDbProperties());
     }
 
-    public function testGetDbPropertyName()
+    public function testGetDbPropertyName(): void
     {
         $this->assertEquals('someName', TestDbEntity::getDbPropertyName('some_name'));
     }
 
-    public function testGetModifiedDbData()
+    public function testGetModifiedDbData(): void
     {
         $entity = new TestDbEntity();
         $this->assertEmpty($entity->getModifiedDbData());
@@ -220,7 +220,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertArrayHasKey('someField', $entity->getModifiedDbData());
     }
 
-    public function clearModifiedDbProperty()
+    public function clearModifiedDbProperty(): void
     {
         $entity = new TestDbEntity();
         $entity->setSomeField(true);
@@ -232,7 +232,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertNotEmpty($entity->getModifiedDbData());
     }
 
-    public function testClearModifiedDbProperties()
+    public function testClearModifiedDbProperties(): void
     {
         $entity = new TestDbEntity();
         $entity->setSomeField(true);
@@ -241,7 +241,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEmpty($entity->getModifiedDbData());
     }
 
-    public function testSetAllDbPropertiesAsModified()
+    public function testSetAllDbPropertiesAsModified(): void
     {
         $entity = new TestDbEntity();
         $this->assertEmpty($entity->getModifiedDbData());
@@ -250,7 +250,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals($entity->getDbData(), $entity->getModifiedDbData());
     }
 
-    public function test__call()
+    public function test__call(): void
     {
         $entity = new TestDbEntity(5);
         $this->assertEquals(5, $entity->__call('getSomeId'));
@@ -260,21 +260,21 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->hasModifiedDbProperties());
     }
 
-    public function test__callFail()
+    public function test__callFail(): void
     {
         $entity = new TestDbEntity();
         $this->expectException('\BadMethodCallException');
         $entity->__call('getBlabla');
     }
 
-    public function test__callFailArgCount()
+    public function test__callFailArgCount(): void
     {
         $entity = new TestDbEntity();
         $this->expectException('\BadMethodCallException');
         $entity->__call('setSomeId');
     }
 
-    public function testSetDbData()
+    public function testSetDbData(): void
     {
         $entity = new TestDbEntity();
         $entity->setDbData(['someName' => 'bla']);
@@ -282,7 +282,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertContains('bla', $entity->getDbData());
     }
 
-    public function testGetDbRowData()
+    public function testGetDbRowData(): void
     {
         $entity = new TestDbEntity();
         $entity->setDbData(['someName' => 'bla']);
@@ -290,14 +290,14 @@ class AbstractDbEntityTest extends TestCase
         $this->assertArrayHasKey('some_name', $entity->getDbRowData());
     }
 
-    public function testGetDbDataWithoutPrimary()
+    public function testGetDbDataWithoutPrimary(): void
     {
         $entity = new TestDbEntity();
         $this->assertArrayNotHasKey($entity->getPrimaryDbPropertyKey(), $entity->getDbDataWithoutPrimary());
         $this->assertArrayHasKey('someField', $entity->getDbDataWithoutPrimary());
     }
 
-    public function testGetDbDataWithoutPrimaryWithMultiKey()
+    public function testGetDbDataWithoutPrimaryWithMultiKey(): void
     {
         $entity = new TestDbEntityMultiPrimary();
 
@@ -307,7 +307,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertArrayHasKey('someField', $entity->getDbDataWithoutPrimary());
     }
 
-    public function testSetDbDataFromRow()
+    public function testSetDbDataFromRow(): void
     {
         $primaryDbValue = 123;
 
@@ -347,7 +347,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals($desiredResult2, array_slice($entity->getDbData(), 0, 5));
     }
 
-    public function testConstructWithRowData()
+    public function testConstructWithRowData(): void
     {
         $primaryDbValue = 123;
         $rowData = [
@@ -365,7 +365,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals($primaryDbValue, $entity->getPrimaryDbValue());
     }
 
-    public function testDeleteFromDbOnSave()
+    public function testDeleteFromDbOnSave(): void
     {
         $entity = new TestDbEntity();
         $this->assertFalse($entity->shouldBeDeletedFromDbOnSave());
@@ -373,7 +373,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->shouldBeDeletedFromDbOnSave());
     }
 
-    public function testForceDbInsertOnSave()
+    public function testForceDbInsertOnSave(): void
     {
         $entity = new TestDbEntity();
         $this->assertFalse($entity->shouldForceDbInsertOnSave());
@@ -381,55 +381,55 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->shouldForceDbInsertOnSave());
     }
 
-    public function testGetDbProperties()
+    public function testGetDbProperties(): void
     {
         $entity = new TestDbEntity();
         $this->assertArrayHasKey('someName', $entity->getDbProperties());
     }
 
-    public function testGetDbPropertyMaxLength()
+    public function testGetDbPropertyMaxLength(): void
     {
         $entity = new TestDbEntity();
         $this->assertEquals(5, $entity->getDbPropertyMaxLength('someName'));
     }
 
-    public function testGetDbPropertyRequired()
+    public function testGetDbPropertyRequired(): void
     {
         $entity = new TestDbEntity();
         $this->assertTrue($entity->getDbPropertyRequired('someName'));
     }
 
-    public function testGetDbPropertyNonEmpty()
+    public function testGetDbPropertyNonEmpty(): void
     {
         $entity = new TestDbEntity();
         $this->assertTrue($entity->getDbPropertyNonEmpty('someOtherFloat'));
     }
 
-    public function testGetDbTableName()
+    public function testGetDbTableName(): void
     {
         $entity = new TestDbEntity();
         $this->assertEquals('someTable', $entity->getDbTableName());
     }
 
-    public function testGetPrimaryDbPropertyKey()
+    public function testGetPrimaryDbPropertyKey(): void
     {
         $entity = new TestDbEntity();
         $this->assertEquals('someId', $entity->getPrimaryDbPropertyKey());
     }
 
-    public function testGetPrimaryDbFieldKey()
+    public function testGetPrimaryDbFieldKey(): void
     {
         $entity = new TestDbEntity();
         $this->assertEquals('some_id', $entity->getPrimaryDbFieldKey());
     }
 
-    public function testGetPrimaryDbFieldKeyWithMultiKey()
+    public function testGetPrimaryDbFieldKeyWithMultiKey(): void
     {
         $entity = new TestDbEntityMultiPrimary();
         $this->assertEquals(['some_id', 'some_other_id'], $entity->getPrimaryDbFieldKey());
     }
 
-    public function testGetDbPropertyNames()
+    public function testGetDbPropertyNames(): void
     {
         $entity = new TestDbEntity(1);
 
@@ -439,14 +439,14 @@ class AbstractDbEntityTest extends TestCase
         $this->assertContains('someField', $propertyNames);
     }
 
-    public function testGetDbFieldNames()
+    public function testGetDbFieldNames(): void
     {
         $entity = new TestDbEntity();
         $this->assertContains('some_name', $entity->getDbFieldNames());
         $this->assertContains('some_field', $entity->getDbFieldNames());
     }
 
-    public function testGetPrefixedDbFieldNames()
+    public function testGetPrefixedDbFieldNames(): void
     {
         $entity = new TestDbEntity();
         $prefixedDbFieldNames = $entity->getPrefixedDbFieldNames('t');
@@ -454,7 +454,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertContains('t.some_field', $prefixedDbFieldNames);
     }
 
-    public function testSetDeleted()
+    public function testSetDeleted(): void
     {
         $entity = new TestDbEntity();
 
@@ -463,7 +463,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testGetAliasedDbFieldNames()
+    public function testGetAliasedDbFieldNames(): void
     {
         $entity = new TestDbEntity();
         $newColumns = $entity->getAliasedDbFieldNames('t');
@@ -473,7 +473,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertContains('t.some_field AS t_some_field', $newColumns);
     }
 
-    public function testFilterStripDbRowData()
+    public function testFilterStripDbRowData(): void
     {
         $entity = new TestDbEntity();
         $rawDbData = ['t_bla_bla' => 1, 't_test' => 2];
@@ -482,13 +482,13 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals(['bla_bla' => 1, 'test' => 2], $strippedData);
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $entity = new TestDbEntity();
         $this->assertNotContains('private info', serialize($entity));
     }
 
-    public function testUnserialize()
+    public function testUnserialize(): void
     {
         $entity = new TestDbEntity();
         $entity->publicProperty = 123;
@@ -496,7 +496,7 @@ class AbstractDbEntityTest extends TestCase
         $this->assertEquals(123, $unserializedEntity->publicProperty);
     }
 
-    public function testMergeWith()
+    public function testMergeWith(): void
     {
         $entity = new TestDbEntity();
         $entity2 = new TestDbEntity();

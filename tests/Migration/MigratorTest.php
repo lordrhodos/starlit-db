@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db\Migration;
 
@@ -22,7 +22,7 @@ class MigratorTest extends TestCase
      */
     protected $callbackInfo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockDb = $this->createMock(Db::class);
 
@@ -34,12 +34,12 @@ class MigratorTest extends TestCase
         $this->migrator = new Migrator($migrationsDir, $this->mockDb, $infoCallback);
     }
 
-    public function testGetLatestNumber()
+    public function testGetLatestNumber(): void
     {
          $this->assertEquals(2, $this->migrator->getLatestNumber());
     }
 
-    public function testGetCurrentNumber()
+    public function testGetCurrentNumber(): void
     {
         // Set current version to 1
         $migrationTableRows = [
@@ -50,7 +50,7 @@ class MigratorTest extends TestCase
         $this->assertEquals(1, $this->migrator->getCurrentNumber());
     }
 
-    public function testEmptyDb()
+    public function testEmptyDb(): void
     {
         $migrationTableRows = [
             ['table1'],
@@ -64,7 +64,7 @@ class MigratorTest extends TestCase
         $this->migrator->emptyDb();
     }
 
-    public function testMigrateDown()
+    public function testMigrateDown(): void
     {
         // Set current version to 2
         $migrationTableRows = [
@@ -78,7 +78,7 @@ class MigratorTest extends TestCase
         $this->assertContains('Done!', $this->callbackInfo);
     }
 
-    public function testMigrateUp()
+    public function testMigrateUp(): void
     {
         // Set current version to 1
         $migrationTableRows = [
@@ -92,7 +92,7 @@ class MigratorTest extends TestCase
         $this->assertContains('Done!', $this->callbackInfo);
     }
 
-    public function testMigrateAlreadyUpToDate()
+    public function testMigrateAlreadyUpToDate(): void
     {
         // Set current version to 2
         $migrationTableRows = [
@@ -106,7 +106,7 @@ class MigratorTest extends TestCase
         $this->assertContains('up to date ', $this->callbackInfo);
     }
 
-    public function testMigrateMissing()
+    public function testMigrateMissing(): void
     {
         // Set current version to 2
         $migrationTableRows = [
@@ -119,7 +119,7 @@ class MigratorTest extends TestCase
         $this->assertContains('Migrating up 1', $this->callbackInfo);
     }
 
-    public function testMigrateLatestVersionHigher()
+    public function testMigrateLatestVersionHigher(): void
     {
         // Set current version to 3
         $migrationTableRows = [
@@ -131,7 +131,7 @@ class MigratorTest extends TestCase
         $this->migrator->migrate();
     }
 
-    public function testMigrateToInvalidNumber()
+    public function testMigrateToInvalidNumber(): void
     {
         // Set current version to 1
         $migrationTableRows = [
@@ -143,7 +143,7 @@ class MigratorTest extends TestCase
         $this->migrator->migrate('bla');
     }
 
-    public function testMigrateToNonExistantdNumber()
+    public function testMigrateToNonExistantdNumber(): void
     {
         // Set current version to 1
         $migrationTableRows = [

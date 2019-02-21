@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db\Exception;
 
@@ -14,14 +14,14 @@ class QueryExceptionTest extends TestCase
     private $sql = 'SELECT * FROM `table` WHERE `column_1` = ? AND `column_2` = ?';
     private $parameters = ['a', 'b'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $mockPdoException = $this->createMock(\PDOException::class);
 
         $this->exception = new QueryException($mockPdoException, $this->sql, $this->parameters);
     }
 
-    public function testGetMessage()
+    public function testGetMessage(): void
     {
         $message = $this->exception->getMessage();
 
@@ -30,12 +30,12 @@ class QueryExceptionTest extends TestCase
         $this->assertContains($this->parameters[1], $message);
     }
 
-    public function testGetSql()
+    public function testGetSql(): void
     {
         $this->assertEquals($this->sql, $this->exception->getSql());
     }
 
-    public function testGetDbParameters()
+    public function testGetDbParameters(): void
     {
         $this->assertEquals($this->parameters, $this->exception->getDbParameters());
     }

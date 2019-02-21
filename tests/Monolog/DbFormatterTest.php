@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db\Monolog;
 
@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DbFormatterTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = new DbFormatter();
 
@@ -23,7 +23,7 @@ class DbFormatterTest extends TestCase
         $this->assertEquals('The error message', $formatter->format($record));
     }
 
-    public function testFormatExceedMaxLength()
+    public function testFormatExceedMaxLength(): void
     {
         $formatter = new DbFormatter(null, true, true, 5);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db;
 
@@ -130,13 +130,13 @@ class DbTest extends TestCase
         $this->assertInstanceOf(PDO::class, $db->getPdo());
     }
 
-    public function testDisconnectClearsPdo()
+    public function testDisconnectClearsPdo(): void
     {
         $this->db->disconnect();
         $this->assertEmpty($this->db->getPdo());
     }
 
-    public function testReconnect()
+    public function testReconnect(): void
     {
         $mockDb = $this->createPartialMock(Db::class, ['disconnect', 'connect']);
         $mockDb->expects($this->once())->method('disconnect');
@@ -145,17 +145,17 @@ class DbTest extends TestCase
         $mockDb->reconnect();
     }
 
-    public function testIsConnectedReturnsTrue()
+    public function testIsConnectedReturnsTrue(): void
     {
         $this->assertTrue($this->db->isConnected());
     }
 
-    public function testGetPdoIsPdoInstance()
+    public function testGetPdoIsPdoInstance(): void
     {
         $this->assertInstanceOf(PDO::class, $this->db->getPdo());
     }
 
-    public function testExecCallsPdoWithSqlAndParams()
+    public function testExecCallsPdoWithSqlAndParams(): void
     {
         $sql = 'UPDATE `test_table` SET `test_column` = ? AND `other_column` = ?';
         $sqlParameters = [1, 2.3, true, false, 'abc', null];
@@ -180,7 +180,7 @@ class DbTest extends TestCase
         $this->assertEquals($rowCount, $result);
     }
 
-    public function testPrepareParameters()
+    public function testPrepareParameters(): void
     {
         $dateTime = new \DateTime('2000-01-01 00:00:00');
         $parameters = [$dateTime, 12, 'foo'];
@@ -192,7 +192,7 @@ class DbTest extends TestCase
         $this->assertSame('foo', $preparedParameters[2]);
     }
 
-    public function testPrepareParametersWithInvalidParametersShouldThrowException()
+    public function testPrepareParametersWithInvalidParametersShouldThrowException(): void
     {
         $parameters = [new \stdClass()];
 
@@ -201,7 +201,7 @@ class DbTest extends TestCase
         $this->invokeInternalMethod($this->db, 'prepareParameters', $parameters);
     }
 
-    public function testExecFailThrowsQueryException()
+    public function testExecFailThrowsQueryException(): void
     {
         $this->mockPdo
             ->method('prepare')
@@ -211,7 +211,7 @@ class DbTest extends TestCase
         $this->db->exec('NO SQL');
     }
 
-    public function testExecThrowsExceptionWithInvalidParameterTypes()
+    public function testExecThrowsExceptionWithInvalidParameterTypes(): void
     {
         $mockPdoStatement = $this->createMock(PDOStatement::class);
         $this->mockPdo->method('prepare')->willReturn($mockPdoStatement);
@@ -222,7 +222,7 @@ class DbTest extends TestCase
         $this->db->exec('', $sqlParameters);
     }
 
-    public function testFetchRowCallsPdoWithSqlAndParams()
+    public function testFetchRowCallsPdoWithSqlAndParams(): void
     {
         $sql = 'SELECT * FROM `test_table` WHERE id = ? LIMIT 1';
         $sqlParameters = [1];
@@ -245,7 +245,7 @@ class DbTest extends TestCase
          $this->assertEquals($tableData, $this->db->fetchRow($sql, $sqlParameters));
     }
 
-    public function testFetchRowsCallsPdoWithSqlAndParams()
+    public function testFetchRowsCallsPdoWithSqlAndParams(): void
     {
         $sql = 'SELECT * FROM `test_table` WHERE id < ?';
         $sqlParameters = [3];
@@ -268,7 +268,7 @@ class DbTest extends TestCase
         $this->assertEquals($tableData, $this->db->fetchRows($sql, $sqlParameters));
     }
 
-    public function testFetchOneCallsPdoWithSqlAndParams()
+    public function testFetchOneCallsPdoWithSqlAndParams(): void
     {
         $sql = 'SELECT COUNT(*) FROM `test_table` WHERE id < ?';
         $sqlParameters = [10];
@@ -291,7 +291,7 @@ class DbTest extends TestCase
         $this->assertEquals($result, $this->db->fetchValue($sql, $sqlParameters));
     }
 
-    public function testQuoteCallPdo()
+    public function testQuoteCallPdo(): void
     {
         $this->mockPdo->expects($this->once())
             ->method('quote');
@@ -299,7 +299,7 @@ class DbTest extends TestCase
         $this->db->quote(1);
     }
 
-    public function testGetLastInsertIdCallsPdo()
+    public function testGetLastInsertIdCallsPdo(): void
     {
         $this->mockPdo->expects($this->once())
             ->method('lastInsertId');
@@ -307,7 +307,7 @@ class DbTest extends TestCase
         $this->db->getLastInsertId();
     }
 
-    public function testBeginTransactionCallsPdoAndReturnsTrue()
+    public function testBeginTransactionCallsPdoAndReturnsTrue(): void
     {
         $this->mockPdo->expects($this->once())
             ->method('beginTransaction');
@@ -315,14 +315,14 @@ class DbTest extends TestCase
         $this->assertTrue($this->db->beginTransaction());
     }
 
-    public function testBeginTransactionReturnsFalse()
+    public function testBeginTransactionReturnsFalse(): void
     {
         $this->db->beginTransaction();
 
         $this->assertFalse($this->db->beginTransaction(true));
     }
 
-    public function testCommitCallsPdo()
+    public function testCommitCallsPdo(): void
     {
         $this->mockPdo->expects($this->once())
             ->method('commit');
@@ -330,7 +330,7 @@ class DbTest extends TestCase
         $this->db->commit();
     }
 
-    public function testRollBackCallsPdo()
+    public function testRollBackCallsPdo(): void
     {
         $this->mockPdo->expects($this->once())
             ->method('rollBack');
@@ -338,14 +338,14 @@ class DbTest extends TestCase
         $this->db->rollBack();
     }
 
-    public function testHasActiveTransactionReturnsTrue()
+    public function testHasActiveTransactionReturnsTrue(): void
     {
         $this->db->beginTransaction();
 
         $this->assertTrue($this->db->hasActiveTransaction());
     }
 
-    public function testHasActiveTransactionReturnsFalse()
+    public function testHasActiveTransactionReturnsFalse(): void
     {
         $this->assertFalse($this->db->hasActiveTransaction());
 
@@ -358,7 +358,7 @@ class DbTest extends TestCase
         $this->assertFalse($this->db->hasActiveTransaction());
     }
 
-    public function testInsertCallsExecWithSqlAndParams()
+    public function testInsertCallsExecWithSqlAndParams(): void
     {
         $table = 'test_table';
         $insertData = ['id' => 1, 'name' => 'one'];
@@ -375,7 +375,7 @@ class DbTest extends TestCase
         $this->assertEquals($expectedAffectedRows, $mockDb->insert($table, $insertData));
     }
 
-    public function testInsertWithoutDataCallsExecWithSql()
+    public function testInsertWithoutDataCallsExecWithSql(): void
     {
         $table = 'test_table';
         $insertData = [];
@@ -389,7 +389,7 @@ class DbTest extends TestCase
         $mockDb->insert($table, $insertData);
     }
 
-    public function testInsertWithUpdateOnDuplicateDataCallsExecWithSql()
+    public function testInsertWithUpdateOnDuplicateDataCallsExecWithSql(): void
     {
         $table = 'test_table';
         $insertData = ['id' => 1, 'name' => 'one'];
@@ -405,7 +405,7 @@ class DbTest extends TestCase
         $mockDb->insert($table, $insertData, true);
     }
 
-    public function testUpdateCallsExecWithSqlAndParams()
+    public function testUpdateCallsExecWithSqlAndParams(): void
     {
         $table = 'test_table';
         $updateData = ['name' => 'ONE'];

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db;
 
@@ -16,20 +16,20 @@ class BasicDbEntityServiceTest extends TestCase
      */
     protected $dbService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockDb = $this->createMock(Db::class);
         $this->dbService = new BasicDbEntityService($this->mockDb);
     }
 
-    public function testLoadThrowsExceptionWithInvalidEntity()
+    public function testLoadThrowsExceptionWithInvalidEntity(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $entity = new ServiceTestEntity();
         $this->dbService->load($entity);
     }
 
-    public function testLoadThrowsExceptionWhenEntityDoesNotExist()
+    public function testLoadThrowsExceptionWhenEntityDoesNotExist(): void
     {
         $this->mockDb->expects($this->any())
             ->method('fetchRow')
@@ -40,7 +40,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->load($entity);
     }
 
-    public function testLoadReturnsLoadedEntity()
+    public function testLoadReturnsLoadedEntity(): void
     {
         $this->mockDb->expects($this->any())
             ->method('fetchRow')
@@ -51,7 +51,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->assertEquals(['id' => 1, 'someName' => 'A name', 'someValue' => 1], $entity->getDbData());
     }
 
-    public function testSaveDoesntSaveUnchangedEntity()
+    public function testSaveDoesntSaveUnchangedEntity(): void
     {
         $this->mockDb->expects($this->never())
             ->method('exec');
@@ -60,7 +60,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->assertFalse($this->dbService->save($entity));
     }
 
-    public function testSaveInserts()
+    public function testSaveInserts(): void
     {
         $entity = new ServiceTestEntity();
         $entity->setSomeName('A Name');
@@ -75,7 +75,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveUpdates()
+    public function testSaveUpdates(): void
     {
         $entity = new ServiceTestEntity(3);
         $entity->setSomeName('A Name');
@@ -92,7 +92,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveUpdatesMultiKeyEntity()
+    public function testSaveUpdatesMultiKeyEntity(): void
     {
         $key = [3, 2];
         $entity = new ServiceTestMultiKeyEntity($key);
@@ -110,7 +110,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveFailsDueToMaxLengthError()
+    public function testSaveFailsDueToMaxLengthError(): void
     {
         $entity = new ServiceTestEntity();
         $entity->setSomeName('12345678901');
@@ -119,7 +119,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveFailsOnRequiredError()
+    public function testSaveFailsOnRequiredError(): void
     {
         $entity = new ServiceTestEntity();
         $entity->setSomeName('');
@@ -128,7 +128,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveFailsOnDateTimeRequiredError()
+    public function testSaveFailsOnDateTimeRequiredError(): void
     {
         $entity = new ServiceDateTimeTestEntity();
         $entity->setSomeDate(null);
@@ -137,7 +137,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveFailsOnEmptyError()
+    public function testSaveFailsOnEmptyError(): void
     {
         $entity = new ServiceTestEntity();
         $entity->setSomeName('A Name');
@@ -147,7 +147,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->save($entity);
     }
 
-    public function testSaveDoesntDeleteWhenNoPrimary()
+    public function testSaveDoesntDeleteWhenNoPrimary(): void
     {
         $entity = new ServiceTestEntity();
         $entity->setDeleteFromDbOnSave(true);
@@ -158,7 +158,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->assertFalse($this->dbService->save($entity));
     }
 
-    public function testSaveDeletes()
+    public function testSaveDeletes(): void
     {
         $entity = new ServiceTestEntity(1);
         $entity->setDeleteFromDbOnSave(true);
@@ -170,7 +170,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->assertFalse($this->dbService->save($entity));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $entity = new ServiceTestEntity(1);
 
@@ -181,7 +181,7 @@ class BasicDbEntityServiceTest extends TestCase
         $this->dbService->delete($entity);
     }
 
-    public function testDeleteThrowsExceptionOnInvalidEntity()
+    public function testDeleteThrowsExceptionOnInvalidEntity(): void
     {
         $entity = new ServiceTestEntity();
 

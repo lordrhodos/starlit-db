@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db\Monolog;
 
@@ -30,13 +30,13 @@ class DbHandlerTest extends TestCase
      */
     private $db;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->db = $this->createMock(Db::class);
         $this->dbHandler = new DbHandler($this->db, 10, ['user_id']);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $expectedDbData = [
             'channel' => 'system',
@@ -51,7 +51,7 @@ class DbHandlerTest extends TestCase
         $this->dbHandler->handle(self::$testRecord);
     }
 
-    public function testWriteWithContextAndExtra()
+    public function testWriteWithContextAndExtra(): void
     {
         $testRecord = array_merge(self::$testRecord, [
             'context' => ['environment' => 'testing'],
@@ -72,7 +72,7 @@ class DbHandlerTest extends TestCase
         $this->dbHandler->handle($testRecord);
     }
 
-    public function testWriteWithClean()
+    public function testWriteWithClean(): void
     {
         $this->db
             ->method('fetchValue')
@@ -87,7 +87,7 @@ class DbHandlerTest extends TestCase
         $this->dbHandler->handle(self::$testRecord);
     }
 
-    public function testWriteWithNoChanceOfClean()
+    public function testWriteWithNoChanceOfClean(): void
     {
         $this->db
             ->method('fetchValue')
@@ -103,7 +103,7 @@ class DbHandlerTest extends TestCase
         $this->dbHandler->handle(self::$testRecord);
     }
 
-    public function testWriteNotTimeToCleanYet()
+    public function testWriteNotTimeToCleanYet(): void
     {
         $this->db
             ->method('fetchValue')

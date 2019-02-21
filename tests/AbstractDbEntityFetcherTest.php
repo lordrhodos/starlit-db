@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Starlit\Db;
 
@@ -16,13 +16,13 @@ class AbstractDbEntityFetcherTest extends TestCase
      */
     protected $mockDb;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockDb = $this->createMock(Db::class);
         $this->dbFetcher = new TestFetcher($this->mockDb);
     }
 
-    public function testGetLimitSql()
+    public function testGetLimitSql(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getLimitSql');
@@ -34,7 +34,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals('LIMIT 5', $limitSql);
     }
 
-    public function testGetLimitSqlPageItem()
+    public function testGetLimitSqlPageItem(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getLimitSql');
@@ -47,7 +47,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals('LIMIT 0, 10', $limitSql);
     }
 
-    public function testGetLimitSqlPageItemInvalidPageNo()
+    public function testGetLimitSqlPageItemInvalidPageNo(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -59,7 +59,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $method->invoke($this->dbFetcher, '', $pageItem);
     }
 
-    public function testGetFetchPaginationResult()
+    public function testGetFetchPaginationResult(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getFetchPaginationResult');
@@ -72,7 +72,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals($fakeObjects, $result);
     }
 
-    public function testGetFetchPaginationResultPagination()
+    public function testGetFetchPaginationResultPagination(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getFetchPaginationResult');
@@ -90,7 +90,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals(count($fakeObjects), $totalRowCount);
     }
 
-    public function testGetFetchPaginationAsDbEntitiesResult()
+    public function testGetFetchPaginationAsDbEntitiesResult(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getDbEntitiesFromRowsPaginated');
@@ -108,7 +108,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertArrayHasKey('bar', $objects);
     }
 
-    public function testGetFetchPaginationAsDbEntitiesResultPagination()
+    public function testGetFetchPaginationAsDbEntitiesResultPagination(): void
     {
         // Use reflection to make protected method accessible
         $method = new \ReflectionMethod($this->dbFetcher, 'getDbEntitiesFromRowsPaginated');
@@ -130,7 +130,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertArrayHasKey('bar', $objects);
     }
 
-    public function testGetDbEntitiesFromRows()
+    public function testGetDbEntitiesFromRows(): void
     {
         $rows = [
             ['id' => 1, 'some_name' => 'asd'],
@@ -149,7 +149,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals('asd3', $objects[1]->getSomeName());
     }
 
-    public function testGetDbEntitiesFromRowsWithKey()
+    public function testGetDbEntitiesFromRowsWithKey(): void
     {
         $rows = [
             ['id' => 1, 'some_name' => 'asd'],
@@ -165,7 +165,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals(1, $objects['asd']->getId());
     }
 
-    public function testGetDbEntitiesFromRowsWithMultiKeyEntity()
+    public function testGetDbEntitiesFromRowsWithMultiKeyEntity(): void
     {
         $rows = [
             ['id' => 1, 'id2' => 5, 'some_value' => 'asd'],
@@ -182,7 +182,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertEquals([1, 5], $objects['1-5']->getPrimaryDbValue());
     }
 
-    public function testGetDbEntitiesFromRowsFail()
+    public function testGetDbEntitiesFromRowsFail(): void
     {
         $invalidDbFetcher = new TestIncompleteFetcher($this->mockDb);
 
@@ -194,7 +194,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $method->invokeArgs($invalidDbFetcher, [&$rows]);
     }
 
-    public function testGetDbEntityFromRow()
+    public function testGetDbEntityFromRow(): void
     {
         // Make method accessible
         $refMethod = new \ReflectionMethod($this->dbFetcher, 'getDbEntityFromRow');
@@ -206,7 +206,7 @@ class AbstractDbEntityFetcherTest extends TestCase
         $this->assertInstanceOf(TestFetcherEntity::class, $object);
     }
 
-    public function testGetDbEntityFromRowFail()
+    public function testGetDbEntityFromRowFail(): void
     {
         $invalidDbFetcher = new TestIncompleteFetcher($this->mockDb);
 
