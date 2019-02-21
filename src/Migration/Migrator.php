@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Starlit Db.
  *
@@ -303,7 +303,7 @@ class Migrator
     {
         if ($to === null) {
             return $this->getLatestNumber();
-        } elseif (!preg_match('/^\d+$/', $to)) {
+        } elseif (!preg_match('/^\d+$/', (string) $to)) {
             throw new \InvalidArgumentException('Migration number must be a number');
         }
 
