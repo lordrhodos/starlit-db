@@ -180,24 +180,25 @@ class DbTest extends TestCase
         $this->assertEquals($rowCount, $result);
     }
 
-    public function testDateTimeParameterIsConvertedToString()
+    public function testPrepareParameters()
     {
-        $dateTime = new DateTime('2000-01-01 00:00:00');
-        $sqlParameters = [$dateTime];
-        $sql = '';
+        $dateTime = new \DateTime('2000-01-01 00:00:00');
+        $parameters = [$dateTime, 12, 'foo'];
 
-        $mockPdoStatement = $this->createMock(PDOStatement::class);
+        $preparedParameters = $this->invokeInternalMethod($this->db, 'prepareParameters', $parameters);
 
-        $this->mockPdo
-            ->method('prepare')
-            ->with($sql)
-            ->willReturn($mockPdoStatement);
+        $this->assertSame('2000-01-01 00:00:00', $preparedParameters[0]);
+        $this->assertSame(12, $preparedParameters[1]);
+        $this->assertSame('foo', $preparedParameters[2]);
+    }
 
-        $mockPdoStatement
-            ->method('execute')
-            ->with([$dateTime->format('Y-m-d H:i:s')]);
+    public function testPrepareParametersWithInvalidParametersShouldThrowException()
+    {
+        $parameters = [new \stdClass()];
 
-        $this->db->exec($sql, $sqlParameters);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid db parameter type "object"');
+        $this->invokeInternalMethod($this->db, 'prepareParameters', $parameters);
     }
 
     public function testExecFailThrowsQueryException()
@@ -425,5 +426,22 @@ class DbTest extends TestCase
             $expectedAffectedRows,
             $mockDb->update($table, $updateData, $whereSql, $whereParameters)
         );
+
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    private function invokeInternalMethod(Db $db, string $method, array $parameters)
+    {
+        $dbReflection = new \ReflectionClass($db);
+        $prepareParametersMethod = $dbReflection->getMethod($method);
+        $prepareParametersMethod->setAccessible(true);
+        $preparedParameters = $prepareParametersMethod->invoke($db, $parameters);
+
+        return $preparedParameters;
     }
 }
